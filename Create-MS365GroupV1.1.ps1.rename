@@ -24,15 +24,6 @@
                Accept pipeline input?       false
                Accept wildcard characters?
 
-        -SecurityGroup
-            Specify the name of the security to be added as a member.
-            
-            Required?                    true
-               Position?                    0
-               Default value
-               Accept pipeline input?       false
-               Accept wildcard characters?
-
         .PARAMETER Extension
         Specifies the extension. "GroupSMTPAddress" is the default.
 
@@ -43,7 +34,7 @@
                Accept wildcard characters?
 
         .EXAMPLE
-        C:\PS> Create-MS365Group.ps1 -GroupName "Finance Department" -GroupSMTPAddress Finance@contoso.onmicrosoft.com -Folders Finance,Finance_External -SecurityGroup sg-financedepartment
+        C:\PS> Create-MS365Group.ps1 -GroupName "Finance Department" -GroupSMTPAddress Finance@contoso.onmicrosoft.com -Folders Finance,Finance_External
 
         .COPYRIGHT
         MIT License, feel free to distribute and use as you like, please leave author information.
@@ -65,11 +56,6 @@
         Position=1,
         HelpMessage="Enter name/names of folders to be created in Sharepoint Site")]
         [String]$Folders
-        ,
-        [Parameter(Mandatory=$True,
-        Position=2,
-        HelpMessage="Enter the name of the security group")]
-        [String]$SecurityGroup
         )
         
         
@@ -153,11 +139,12 @@ Function CreateSharepointOnlineFolders ($strSharepointUrl,$strFolders) {
     Write-Verbose "Adding folders to Sharepoint Document library of Microsoft 365 Group"
     If ($strFolders)
         {
-        $connection = Connect-PnPOnline -Url $strSharepointUrl -UseWebLogin -ReturnConnection
+        $connection = Connect-PnPOnline -Url $strSharepointUrl -ReturnConnection -UseWebLogin
         $StrFoldersList = $strFolders.Split(",")
         ForEach ($strFolder in $StrFoldersList) 
         {
             Write-Verbose "Adding folder $strFolder to Sharepoint Document"
+            sleep 60
             Resolve-PnPFolder -SiteRelativePath "/Shared Documents/$strFolder" -Connection $connection  
         }   
         
@@ -167,26 +154,11 @@ Function CreateSharepointOnlineFolders ($strSharepointUrl,$strFolders) {
     }
     }        
 
-    Function AddGroupToSharepointOnlineSite ($strSharepointUrl,$strGroupname,$strSecurityGroup) {
-        Write-Verbose "Adding security group to sharepoint members of Sharepoint Site"
-        If ($strSharepointUrl)
-            {
-            $ADGroupID = Get-AzureADGroup -SearchString "$strSecurityGroup" | Select-Object -ExpandProperty ObjectId
-            $connection = Connect-PnPOnline -Url $strSharepointUrl -UseWebLogin -ReturnConnection
-            $LoginName = "c:0t`.c`|tenant`|$ADGroupID"       
-            Add-PnPGroupMember -LoginName $LoginName -Identity "$strGroupname Members" -Connection $connection
-            }
-        Else {
-            Write-Output "Sharepoint URL missing in input variable strSharepointUrl"
-        }
-        }        
-
 ConnectExchangeOnline 
 ConnectAzureAD
 $SharepointUrl = CreateMS365Group $Groupname | Select-Object -Skip 1
 ConnectSharepointOnline $SharepointUrl
 CreateSharepointOnlineFolders $SharepointUrl $Folders 
-AddGroupToSharepointOnlineSite $SharepointUrl $Groupname $SecurityGroup
 $StrFoldersList = $Folders.Split(",")
 ForEach ($strFolder in $StrFoldersList) 
         {

@@ -1,0 +1,26 @@
+#Parameters
+$SourceUsername = "clal@borsen.dk"
+$TargetUsername = "test12345@borsen.onmicrosoft.com"
+
+#Connect to Exchange Online
+Connect-ExchangeOnline
+
+#Check if source and Target users are valid
+If($SourceUsername -ne $Null -and $TargetUsername -ne $Null)
+{
+    #Get All memberships of the Source user
+    Write-host "Getting group membership...."
+    $SourceMemberships = Get-DistributionGroup | Where-object { $_.IsDirSynced -ne "True" } | Where-Object { (Get-DistributionGroupMember $_.DistinguishedName | ForEach-Object {$_.PrimarySmtpAddress}) -contains "$Username" } | Select-Object -ExpandProperty DistinguishedName
+
+    #Loop through Each Group
+    ForEach($Membership in $SourceMemberships)
+    {      
+            #Add Target user to the Source User's group
+            Add-DistributionGroupMember -Identity $Membership -Member $TargetUsername
+            Write-host "Added user to Group:" $Membership.DisplayName
+    }
+}
+Else
+{
+    Write-host "Source or Target user is invalid!" -f Yellow
+}
