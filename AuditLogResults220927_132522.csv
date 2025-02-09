@@ -1,4 +1,5 @@
-﻿"Subject","Operation","LogonUserDisplayName","LastAccessed","DestFolderPathName","FolderPathName","ClientInfoString","ClientIPAddress","ClientMachineName","ClientProcessName","ClientVersion","LogonType","MailboxResolvedOwnerName","OperationResult","CrossMailboxOp"
+﻿
+1"Subject","Operation","LogonUserDisplayName","LastAccessed","DestFolderPathName","FolderPathName","ClientInfoString","ClientIPAddress","ClientMachineName","ClientProcessName","ClientVersion","LogonType","MailboxResolvedOwnerName","OperationResult","CrossMailboxOp"
 "Welcome and breakfast","Update","Deldar Nawzadi","9/26/2022 4:09:06 PM",,"\Calendar","Client=REST;Client=RESTSystem;;","2603:10a6:20b:460:cafe::2c",,,,"Owner","Deldar Nawzadi","Succeeded","N/A"
 "Sharing is Caring - September","Create","Deldar Nawzadi","9/26/2022 3:41:39 PM",,"\Drafts","Client=MSExchangeRPC","178.157.254.244",,"OUTLOOK.EXE","16.0.15427.20260","Owner","Deldar Nawzadi","Succeeded","N/A"
 "RE: [EXT] Pakke leveret et forkert sted","SoftDelete","Deldar Nawzadi","9/26/2022 3:40:37 PM",,"\Drafts","Client=MSExchangeRPC","178.157.254.244",,"OUTLOOK.EXE","16.0.15427.20260","Owner","Deldar Nawzadi","Succeeded","False"
